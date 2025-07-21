@@ -26,14 +26,24 @@ def generate_password(length=12, use_upper=True, use_digits=True, use_symbols=Tr
     random.shuffle(password)
     return ''.join(password)
 
-
 if __name__ == "__main__":
     print(" Password Generator ")
 
-    length = int(input("Enter password length (e.g. 12): "))
+    while True:
+        try:
+            length = int(input("Enter password length (1-12): "))
+            if length < 1 or length > 12:
+                raise ValueError("Password length must be between 1 and 12.")
+            break
+        except ValueError as e:
+            print(f"Invalid input: {e}. Please enter an integer between 1 and 12.")
+
     use_upper = input("Include uppercase letters? (y/n): ").lower() == 'y'
     use_digits = input("Include numbers? (y/n): ").lower() == 'y'
     use_symbols = input("Include symbols? (y/n): ").lower() == 'y'
 
-    password = generate_password(length, use_upper, use_digits, use_symbols)
-    print(f"\nGenerated Password: {password}")
+    if not (use_upper or use_digits or use_symbols):
+        print("Error: At least one character set must be selected!")
+    else:
+        password = generate_password(length, use_upper, use_digits, use_symbols)
+        print(f"\nGenerated Password: {password}")
