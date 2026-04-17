@@ -1,5 +1,5 @@
 # 🔐 Password Checker - Secure Password Generator & Security Checker
-## 🌐 Live Demo - [👉 Click Here to Use Password Forge](https://password-generator-eosin-sigma.vercel.app/)
+## 🌐 Live Demo - [👉 Click Here to Use Password Checker](https://password-generator-eosin-sigma.vercel.app/)
 
 A powerful, client side password generation and security auditing tool that helps you create strong, uncrackable passwords and analyze existing ones for vulnerabilities.
 
