@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>🔐 Password Checker | Ultimate Password Generator & RockYou Breach Checker</title>
-    <meta name="description" content="Secure password generator with RockYou.txt breach checking, real-time strength analysis, entropy calculation, and security auditing.">
-    <meta name="keywords" content="password generator, secure password, password strength checker, rockyou, breach check, security tool">
+    <title>🔐 Password Checker | Ultimate Password Generator & Common Password Checker</title>
+    <meta name="description" content="Secure password generator with 10,000 most common passwords check, real-time strength analysis, entropy calculation, and security auditing.">
+    <meta name="keywords" content="password generator, secure password, password strength checker, common passwords, 10k most common, security tool">
     <meta name="author" content="Bhashitha Praharshana">
     <style>
         * {
@@ -256,11 +256,11 @@
             flex: 1;
         }
 
-        .rockyou-btn {
+        .common-btn {
             background: linear-gradient(95deg, #dc2626, #b91c1c);
         }
 
-        .rockyou-btn:hover {
+        .common-btn:hover {
             background: linear-gradient(95deg, #b91c1c, #991b1b);
         }
 
@@ -312,14 +312,14 @@
 
         .warn { color: #bc5a2c; font-weight: 500; }
         .success { color: #2b7a3e; }
-        .breach-alert {
+        .alert-danger {
             background: #fee2e2;
             border-left: 4px solid #dc2626;
             padding: 12px;
             border-radius: 12px;
             margin: 10px 0;
         }
-        .safe-alert {
+        .alert-success {
             background: #d1fae5;
             border-left: 4px solid #10b981;
             padding: 12px;
@@ -360,7 +360,7 @@
 <div class="glass-container">
     <div class="inner-pad">
         <h1>⚡ Password Checker</h1>
-        <div class="badge-sub">Generate uncrackable secrets • Audit any password • RockYou breach check</div>
+        <div class="badge-sub">Generate uncrackable secrets • Audit any password • 10K Common Passwords Check</div>
 
         <div class="tab-bar">
             <button class="tab active" data-tab="gen">✨ Generator</button>
@@ -399,28 +399,28 @@
             </div>
         </div>
 
-        <!-- SECURITY CHECKER PANEL with RockYou Integration -->
+        <!-- SECURITY CHECKER PANEL with Common Passwords Database -->
         <div id="checkPanel" class="panel">
             <div class="password-screen">
                 <input type="text" id="checkerInput" class="password-text" style="border: none; background: white; width: 100%;" placeholder="Paste password to analyze...">
             </div>
             
             <div class="button-group">
-                <button class="gen-btn rockyou-btn" id="rockyouOnlyBtn">🔍 Check in RockYou.txt Only</button>
+                <button class="gen-btn common-btn" id="commonOnlyBtn">🔍 Check in 10K Common Passwords</button>
                 <button class="gen-btn" id="auditBtn">📊 Full Security Scan</button>
             </div>
             
             <button class="copy-btn" id="clearCheckerBtn" style="background: #5b7f8a; width: 100%; margin-top: 12px;">Clear</button>
 
             <div id="loadingStatus" class="loading-indicator" style="display: none;">
-                ⏳ Loading RockYou database...
+                ⏳ Loading 10K Common Passwords database...
             </div>
 
-            <!-- RockYou Only Result Area -->
-            <div id="rockyouResultArea" style="display: none;">
+            <!-- Common Passwords Only Result Area -->
+            <div id="commonResultArea" style="display: none;">
                 <div class="strength-card">
-                    <div>🔍 RockYou.txt Breach Check Result</div>
-                    <div id="rockyouResultContent"></div>
+                    <div>🔍 10K Most Common Passwords Check Result</div>
+                    <div id="commonResultContent"></div>
                 </div>
             </div>
 
@@ -436,43 +436,42 @@
 
             <div id="emptyAuditMsg" class="feedback-box" style="text-align: center; background: #eef3f5;">
                 🔎 Enter a password and choose an option:<br>
-                • <strong>Check in RockYou.txt Only</strong> - Quick breach database check<br>
-                • <strong>Full Security Scan</strong> - Complete strength analysis + breach check
+                • <strong>Check in 10K Common Passwords</strong> - Quick check against top 10,000 common passwords<br>
+                • <strong>Full Security Scan</strong> - Complete strength analysis + common password check
             </div>
 
             <div class="stats-badge" id="dbStats">
-                ⚡ RockYou database: Loading...
+                ⚡ Common passwords database: Loading...
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Global variable to store RockYou passwords
-    let rockyouPasswords = new Set();
-    let rockyouLoaded = false;
-    let rockyouLoading = false;
+    // Global variable to store common passwords
+    let commonPasswords = new Set();
+    let commonLoaded = false;
+    let commonLoading = false;
     let totalPasswords = 0;
 
-    // Path to your rockyou.txt file in the repository
-    // Update this path to match where you placed the file
-    const ROCKYOU_FILE_PATH = 'rockyou.txt';  // If file is in root directory
+    // Path to your 10k-most-common.txt file in the repository
+    const COMMON_FILE_PATH = '10k-most-common.txt';  // Update this to match your file location
 
-    // Function to load rockyou.txt file
-    async function loadRockYouDatabase() {
-        if (rockyouLoaded) return true;
-        if (rockyouLoading) return false;
+    // Function to load 10k-most-common.txt file
+    async function loadCommonPasswordsDatabase() {
+        if (commonLoaded) return true;
+        if (commonLoading) return false;
 
-        rockyouLoading = true;
+        commonLoading = true;
         const loadingDiv = document.getElementById('loadingStatus');
         const statsDiv = document.getElementById('dbStats');
         
         try {
             loadingDiv.style.display = 'block';
-            loadingDiv.innerHTML = '⏳ Loading RockYou breach database... This may take a moment.';
-            statsDiv.innerHTML = '⏳ Loading RockYou database...';
+            loadingDiv.innerHTML = '⏳ Loading 10K Most Common Passwords database... This may take a moment.';
+            statsDiv.innerHTML = '⏳ Loading common passwords database...';
             
-            const response = await fetch(ROCKYOU_FILE_PATH);
+            const response = await fetch(COMMON_FILE_PATH);
             
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -481,32 +480,32 @@
             const text = await response.text();
             const lines = text.split('\n');
             
-            rockyouPasswords.clear();
+            commonPasswords.clear();
             
             for (let line of lines) {
                 let password = line.trim();
                 if (password && !password.startsWith('#')) {
-                    rockyouPasswords.add(password.toLowerCase());
+                    commonPasswords.add(password.toLowerCase());
                 }
             }
             
-            totalPasswords = rockyouPasswords.size;
-            rockyouLoaded = true;
-            loadingDiv.innerHTML = `✅ RockYou database loaded! (${totalPasswords.toLocaleString()} passwords)`;
-            statsDiv.innerHTML = `✅ RockYou database: ${totalPasswords.toLocaleString()} passwords loaded`;
+            totalPasswords = commonPasswords.size;
+            commonLoaded = true;
+            loadingDiv.innerHTML = `✅ Common passwords database loaded! (${totalPasswords.toLocaleString()} passwords)`;
+            statsDiv.innerHTML = `📚 Common passwords database: ${totalPasswords.toLocaleString()} passwords loaded (Top ${totalPasswords} most used)`;
             
             setTimeout(() => {
                 loadingDiv.style.display = 'none';
             }, 2000);
             
-            console.log(`Loaded ${totalPasswords} passwords from RockYou.txt`);
+            console.log(`Loaded ${totalPasswords} passwords from 10k-most-common.txt`);
             return true;
             
         } catch (error) {
-            console.error('Error loading RockYou file:', error);
-            loadingDiv.innerHTML = `⚠️ Could not load rockyou.txt. Make sure the file exists at: ${ROCKYOU_FILE_PATH}`;
+            console.error('Error loading common passwords file:', error);
+            loadingDiv.innerHTML = `⚠️ Could not load 10k-most-common.txt. Make sure the file exists at: ${COMMON_FILE_PATH}`;
             loadingDiv.style.background = '#fee2e2';
-            statsDiv.innerHTML = '⚠️ RockYou database: Failed to load (using fallback)';
+            statsDiv.innerHTML = '⚠️ Common passwords database: Failed to load';
             
             // Load fallback common passwords
             loadFallbackDatabase();
@@ -516,32 +515,33 @@
             }, 4000);
             return false;
         } finally {
-            rockyouLoading = false;
+            commonLoading = false;
         }
     }
 
-    // Fallback database in case rockyou.txt can't be loaded
+    // Fallback database in case file can't be loaded
     function loadFallbackDatabase() {
         const fallbackPasswords = [
-            "123456", "12345", "123456789", "password", "iloveyou", "princess", "1234567", "rockyou", "12345678", "abc123",
-            "nicole", "daniel", "babygirl", "monkey", "lovely", "jessica", "654321", "michael", "ashley", "qwerty", "111111",
-            "admin", "welcome", "letmein", "1234", "987654321", "dragon", "master", "baseball", "mustang", "superman"
+            "123456", "12345", "123456789", "password", "iloveyou", "princess", "1234567", "12345678", "abc123",
+            "nicole", "daniel", "babygirl", "monkey", "lovely", "jessica", "654321", "michael", "ashley", "qwerty", 
+            "111111", "admin", "welcome", "letmein", "1234", "987654321", "dragon", "master", "baseball", "mustang", 
+            "superman", "football", "whatever", "shadow", "cheese", "computer", "internet", "orange", "banana"
         ];
         
-        rockyouPasswords.clear();
-        fallbackPasswords.forEach(pwd => rockyouPasswords.add(pwd.toLowerCase()));
-        totalPasswords = rockyouPasswords.size;
-        rockyouLoaded = true;
-        console.log(`Loaded ${totalPasswords} fallback passwords`);
+        commonPasswords.clear();
+        fallbackPasswords.forEach(pwd => commonPasswords.add(pwd.toLowerCase()));
+        totalPasswords = commonPasswords.size;
+        commonLoaded = true;
+        console.log(`Loaded ${totalPasswords} fallback common passwords`);
     }
 
-    // Function to check if password is in RockYou database
-    function checkRockYouBreach(password) {
-        if (!rockyouLoaded) {
+    // Function to check if password is in common passwords database
+    function checkCommonPassword(password) {
+        if (!commonLoaded) {
             return {
-                breached: false,
+                found: false,
                 exactMatch: false,
-                message: "ℹ️ RockYou database not loaded yet.",
+                message: "ℹ️ Common passwords database not loaded yet.",
                 details: "Please wait for database to load or try again."
             };
         }
@@ -549,32 +549,32 @@
         const lowerPassword = password.toLowerCase();
         
         // Exact match check
-        if (rockyouPasswords.has(lowerPassword)) {
+        if (commonPasswords.has(lowerPassword)) {
             return {
-                breached: true,
+                found: true,
                 exactMatch: true,
-                message: "🚨 CRITICAL: This exact password was found in the RockYou.txt breach database!",
-                details: `This password appears in the infamous RockYou breach containing 14+ million leaked passwords. Hackers have this exact password in their dictionaries. DO NOT USE this password anywhere!`
+                message: "🚨 CRITICAL: This exact password is in the Top 10,000 most common passwords!",
+                details: `This password appears in the list of the most commonly used passwords worldwide. Hackers will try this password immediately in brute force attacks. DO NOT USE this password anywhere!`
             };
         }
         
         // Check for partial matches
-        for (let rockPwd of rockyouPasswords) {
-            if (rockPwd.length >= 5 && lowerPassword.includes(rockPwd)) {
+        for (let commonPwd of commonPasswords) {
+            if (commonPwd.length >= 5 && lowerPassword.includes(commonPwd)) {
                 return {
-                    breached: true,
+                    found: true,
                     exactMatch: false,
-                    message: `⚠️ WARNING: Your password contains "${rockPwd}" which is a known breached password.`,
-                    details: `Your password includes a common breached password pattern. Consider creating a completely unique password.`
+                    message: `⚠️ WARNING: Your password contains "${commonPwd}" which is a very common password pattern.`,
+                    details: `Your password includes a word/phrase from the top ${totalPasswords.toLocaleString()} most common passwords. Consider creating a more unique password.`
                 };
             }
         }
         
         return {
-            breached: false,
+            found: false,
             exactMatch: false,
-            message: "✅ SAFE: This password was not found in the RockYou breach database.",
-            details: `Your password does not match any of the ${totalPasswords.toLocaleString()} breached passwords in our database. However, always use unique passwords for different accounts.`
+            message: "✅ GOOD: This password was not found in the common passwords database.",
+            details: `Your password does not match any of the ${totalPasswords.toLocaleString()} most common passwords we checked. This is good! However, always use unique passwords for different accounts and avoid personal information.`
         };
     }
 
@@ -657,8 +657,8 @@
         if (/abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz/i.test(pwd)) strength -= 5;
         if (/123|234|345|456|567|678|789|890/.test(pwd)) strength -= 5;
         
-        // RockYou penalty
-        if (rockyouLoaded && rockyouPasswords.has(pwd.toLowerCase())) {
+        // Common password penalty
+        if (commonLoaded && commonPasswords.has(pwd.toLowerCase())) {
             strength = Math.min(strength, 20);
         }
         
@@ -744,64 +744,64 @@
     lengthSlider.addEventListener('input', () => generatePassword());
     lengthNumber.addEventListener('change', () => generatePassword());
 
-    // ========= ROCKYOU ONLY CHECK FUNCTION =========
-    async function checkRockYouOnly() {
+    // ========= COMMON PASSWORDS ONLY CHECK FUNCTION =========
+    async function checkCommonOnly() {
         const pwd = document.getElementById('checkerInput').value;
         if (!pwd || pwd.trim() === "") {
             const emptyMsg = document.getElementById('emptyAuditMsg');
             emptyMsg.style.display = "block";
-            emptyMsg.innerHTML = "⚠️ Please enter a password to check in RockYou database.";
+            emptyMsg.innerHTML = "⚠️ Please enter a password to check against common passwords.";
             emptyMsg.style.background = "#fff0f0";
             document.getElementById('auditResultArea').style.display = 'none';
-            document.getElementById('rockyouResultArea').style.display = 'none';
+            document.getElementById('commonResultArea').style.display = 'none';
             return;
         }
         
         // Ensure database is loaded
-        if (!rockyouLoaded && !rockyouLoading) {
-            await loadRockYouDatabase();
+        if (!commonLoaded && !commonLoading) {
+            await loadCommonPasswordsDatabase();
         }
         
-        const rockyouResult = checkRockYouBreach(pwd);
+        const commonResult = checkCommonPassword(pwd);
         
         // Hide other result areas
         document.getElementById('auditResultArea').style.display = 'none';
         document.getElementById('emptyAuditMsg').style.display = 'none';
         
-        // Show RockYou result area
-        const rockyouResultArea = document.getElementById('rockyouResultArea');
-        const rockyouResultContent = document.getElementById('rockyouResultContent');
-        rockyouResultArea.style.display = 'block';
+        // Show Common Passwords result area
+        const commonResultArea = document.getElementById('commonResultArea');
+        const commonResultContent = document.getElementById('commonResultContent');
+        commonResultArea.style.display = 'block';
         
         let resultHtml = '';
-        if (rockyouResult.breached) {
+        if (commonResult.found) {
             resultHtml = `
-                <div class="breach-alert">
-                    <strong>${rockyouResult.message}</strong>
-                    <p style="margin-top: 10px;">${rockyouResult.details}</p>
-                    ${rockyouResult.exactMatch ? '<p style="margin-top: 10px;"><strong>💡 Recommendation:</strong> Generate a completely new, unique password using our generator!</p>' : ''}
+                <div class="alert-danger">
+                    <strong>${commonResult.message}</strong>
+                    <p style="margin-top: 10px;">${commonResult.details}</p>
+                    ${commonResult.exactMatch ? '<p style="margin-top: 10px;"><strong>💡 Recommendation:</strong> Generate a completely new, unique password using our generator!</p>' : ''}
                 </div>
                 <div class="stats-badge" style="margin-top: 10px;">
-                    🔍 Checked against ${totalPasswords.toLocaleString()} breached passwords
+                    🔍 Checked against ${totalPasswords.toLocaleString()} most common passwords
                 </div>
             `;
         } else {
             resultHtml = `
-                <div class="safe-alert">
-                    <strong>${rockyouResult.message}</strong>
-                    <p style="margin-top: 10px;">${rockyouResult.details}</p>
+                <div class="alert-success">
+                    <strong>${commonResult.message}</strong>
+                    <p style="margin-top: 10px;">${commonResult.details}</p>
                 </div>
                 <div class="stats-badge" style="margin-top: 10px;">
-                    ✅ Verified against ${totalPasswords.toLocaleString()} breached passwords
+                    ✅ Verified against ${totalPasswords.toLocaleString()} common passwords - Your password is unique!
                 </div>
             `;
         }
         
-        rockyouResultContent.innerHTML = resultHtml;
+        commonResultContent.innerHTML = resultHtml;
         
         // Animate
-        rockyouResultArea.classList.add('shake-effect');
-        setTimeout(() => rockyouResultArea.classList.remove('shake-effect'), 300);
+        commonResultArea.classList.add('shake-effect');
+        setTimeout(() => commonResultArea.classList.remove('shake-effect'), 300);
     }
 
     // ========= FULL SECURITY AUDIT =========
@@ -813,24 +813,24 @@
             emptyMsg.innerHTML = "⚠️ Please enter a password to analyze.";
             emptyMsg.style.background = "#fff0f0";
             document.getElementById('auditResultArea').style.display = 'none';
-            document.getElementById('rockyouResultArea').style.display = 'none';
+            document.getElementById('commonResultArea').style.display = 'none';
             return;
         }
         
-        // Ensure RockYou database is loaded
-        if (!rockyouLoaded && !rockyouLoading) {
-            await loadRockYouDatabase();
+        // Ensure Common Passwords database is loaded
+        if (!commonLoaded && !commonLoading) {
+            await loadCommonPasswordsDatabase();
         }
         
         // Hide other result areas
-        document.getElementById('rockyouResultArea').style.display = 'none';
+        document.getElementById('commonResultArea').style.display = 'none';
         document.getElementById('emptyAuditMsg').style.display = 'none';
         
         const auditResultArea = document.getElementById('auditResultArea');
         auditResultArea.style.display = 'block';
         
         const { score, label, color } = calcStrength(pwd);
-        const rockYouResult = checkRockYouBreach(pwd);
+        const commonResult = checkCommonPassword(pwd);
         const len = pwd.length;
         const hasLower = /[a-z]/.test(pwd);
         const hasUpper = /[A-Z]/.test(pwd);
@@ -854,8 +854,8 @@
         if (!hasSymbol) warnings.push("⚠️ No special symbols → entropy reduced.");
         if (/(.)\1{2,}/.test(pwd)) warnings.push("⚠️ Contains repeated characters → pattern risk.");
         
-        if (rockYouResult.breached) {
-            warnings.push(rockYouResult.message);
+        if (commonResult.found) {
+            warnings.push(commonResult.message);
         }
         
         let strengths = [];
@@ -863,16 +863,16 @@
         if (typesCount >= 3) strengths.push("✅ Good character diversity (3+ types).");
         if (typesCount === 4) strengths.push("✅ Excellent mix: lower, upper, digits, symbols.");
         if (entropy > 58) strengths.push(`✅ High entropy (~${entropy} bits) — strong vs brute force.`);
-        if (!rockYouResult.breached && rockyouLoaded) strengths.push("✅ Not found in RockYou breach database.");
+        if (!commonResult.found && commonLoaded) strengths.push("✅ Not found in common passwords database.");
         
         let detailedHtml = `<div><strong>🧬 Analysis details:</strong><ul>`;
         detailedHtml += `<li>📏 Length: ${len}</li>`;
         detailedHtml += `<li>🔣 Character types: ${typesCount}/4 (Lower:${hasLower?"✓":"✗"} Upper:${hasUpper?"✓":"✗"} Digit:${hasNumber?"✓":"✗"} Symbol:${hasSymbol?"✓":"✗"})</li>`;
         detailedHtml += `<li>⚡ Estimated entropy: ~${entropy} bits</li>`;
-        detailedHtml += `<li>🔍 RockYou.txt Check: ${rockYouResult.breached ? "⚠️ FOUND in breach database" : "✅ CLEAR"} ${rockyouLoaded ? `(${totalPasswords.toLocaleString()} passwords checked)` : ""}</li></ul>`;
+        detailedHtml += `<li>🔍 Common Passwords Check: ${commonResult.found ? "⚠️ FOUND in top 10K" : "✅ CLEAR"} ${commonLoaded ? `(${totalPasswords.toLocaleString()} passwords checked)` : ""}</li></ul>`;
         
-        if (rockYouResult.breached) {
-            detailedHtml += `<div class="breach-alert"><strong>🚨 BREACH ALERT:</strong> ${rockYouResult.details}</div>`;
+        if (commonResult.found) {
+            detailedHtml += `<div class="alert-danger"><strong>🚨 WARNING:</strong> ${commonResult.details}</div>`;
         }
         
         if (strengths.length) {
@@ -900,21 +900,21 @@
     }
 
     // Button event listeners
-    const rockyouOnlyBtn = document.getElementById('rockyouOnlyBtn');
+    const commonOnlyBtn = document.getElementById('commonOnlyBtn');
     const auditBtn = document.getElementById('auditBtn');
     const clearCheckerBtn = document.getElementById('clearCheckerBtn');
     const checkerInput = document.getElementById('checkerInput');
 
-    rockyouOnlyBtn.addEventListener('click', checkRockYouOnly);
+    commonOnlyBtn.addEventListener('click', checkCommonOnly);
     auditBtn.addEventListener('click', runSecurityAudit);
     
     clearCheckerBtn.addEventListener('click', () => {
         checkerInput.value = "";
         document.getElementById('auditResultArea').style.display = "none";
-        document.getElementById('rockyouResultArea').style.display = "none";
+        document.getElementById('commonResultArea').style.display = "none";
         const emptyMsg = document.getElementById('emptyAuditMsg');
         emptyMsg.style.display = "block";
-        emptyMsg.innerHTML = "🔎 Enter a password and choose an option:<br>• <strong>Check in RockYou.txt Only</strong> - Quick breach database check<br>• <strong>Full Security Scan</strong> - Complete strength analysis + breach check";
+        emptyMsg.innerHTML = "🔎 Enter a password and choose an option:<br>• <strong>Check in 10K Common Passwords</strong> - Quick check against top 10,000 common passwords<br>• <strong>Full Security Scan</strong> - Complete strength analysis + common password check";
         emptyMsg.style.background = "#eef3f5";
     });
     
@@ -938,9 +938,9 @@
             } else {
                 genPanel.classList.remove('active-panel');
                 checkPanelEl.classList.add('active-panel');
-                // Load RockYou database when switching to checker tab
-                if (!rockyouLoaded && !rockyouLoading) {
-                    loadRockYouDatabase();
+                // Load common passwords database when switching to checker tab
+                if (!commonLoaded && !commonLoading) {
+                    loadCommonPasswordsDatabase();
                 }
             }
         });
@@ -948,7 +948,7 @@
     
     // Initialize
     generatePassword();
-    loadRockYouDatabase();
+    loadCommonPasswordsDatabase();
 </script>
 </body>
 </html>
