@@ -1,0 +1,27 @@
+{
+  "name": "password-generator",
+  "version": "1.0.0",
+  "description": "Ultimate Password Generator & Common Password Checker with 10,000 most common passwords database",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "password",
+    "generator",
+    "security",
+    "password-checker",
+    "analytics"
+  ],
+  "author": "Bhashitha Praharshana",
+  "license": "MIT",
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bhashitha07/password-generator"
+  }
+}
